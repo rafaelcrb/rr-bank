@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "projeto",
+    "slug": "projeto",
+    "version": "1.0.0",
+    "scheme": "rrbank",
+    "orientation": "portrait",
+    "icon": "./assets/icon-rrbank.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-rrbank.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon-rrbank.png"
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
