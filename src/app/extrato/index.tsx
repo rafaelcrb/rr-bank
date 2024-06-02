@@ -13,6 +13,8 @@ import Saldo from 'react-native-vector-icons/EvilIcons'
 import Minhaconta from 'react-native-vector-icons/MaterialCommunityIcons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { router } from 'expo-router';
+import { FlatList } from 'react-native';
+import { Share } from 'react-native';
 
 
 export interface TelaExtratoProps {
@@ -40,6 +42,26 @@ export default function TelaExtrato(props: TelaExtratoProps) {
     router.replace('/pix')
   }
 
+  const transacoes = [
+    { id: 1, descricao: 'Pagamento via pix', valor: '- R$ 777,00', data: 'Seg, 27 de Maio' },
+    { id: 2, descricao: 'Recebimento via pix', valor: '+ R$ 1500,00', data: 'Seg, 27 de Maio' },
+    { id: 3, descricao: 'Pagamento via pix', valor: '+ R$ 500,00', data: 'Seg, 29 de Maio' },
+    { id: 4, descricao: 'Recebimento via pix', valor: '+ R$ 1000,00', data: 'Seg, 29 de Maio' },
+    { id: 5, descricao: 'Recebimento via pix', valor: '+ R$ 1500,00', data: 'Seg, 30 de Maio' },
+    
+  ];
+
+  const handleCompartilhar = (transacao: { id?: number; descricao: any; valor: any; data?: string; }) => {
+    const conteudo = `${transacao.descricao} ${transacao.valor}`;
+  
+    Share.share({
+      message: conteudo,
+    })
+    .then(() => console.log('Conteúdo compartilhado com sucesso!'))
+    .catch(error => console.log('Erro ao compartilhar:', error));
+  };
+
+
 
 
   return (
@@ -59,48 +81,24 @@ export default function TelaExtrato(props: TelaExtratoProps) {
       </View>
 
       <View style={styles.containersenha}>
+        <FlatList
+          data={transacoes}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            
+            <TouchableOpacity onPress={() => handleCompartilhar(item)}>
+              <Text> {item.data}</Text>
+              <View style={styles.textMenu}>
+                <Text>{item.descricao}</Text>
+                <Text>{item.valor}</Text>
+              </View>
+            </TouchableOpacity>
+            
 
-        <View style={{}}>
-          <Text>Seg, 27 de Maio</Text>
-        </View>
-
-        <TouchableOpacity>
-          <View style={styles.textMenu}>
-            <Text>Pagamento via pix </Text>
-            <Text >- R$ 777,00 </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-
-          <View style={styles.textMenu}>
-            <Text>Recebimento via pix</Text>
-            <Text >+ R$ 1500,00 </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View style={styles.textMenu}>
-            <Text>Pagamento via pix </Text>
-            <Text >- R$ 77,00 </Text>
-          </View>
-        </TouchableOpacity>
-
-        <View style={{}}>
-          <Text>Ter, 28 de Maio</Text>
-        </View>
-
-        <TouchableOpacity>
-          <View style={styles.textMenu}>
-            <Text>Pagamento via pix </Text>
-            <Text >- R$ 500,00 </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View style={styles.textMenu}>
-            <Text>Recebimento via pix </Text>
-            <Text >+ R$ 1800,00 </Text>
-          </View>
-        </TouchableOpacity>
-
+            
+          )}
+          
+        />
       </View>
 
 
@@ -205,10 +203,10 @@ const styles = StyleSheet.create({
   containersenha: {
     shadowOpacity: 0.2,
     width: 325,
-    height: 360,
+    height: 450,
     fontSize: 14,
     marginTop: 25,
-    marginBottom: 113,
+    marginBottom: 23,
 
 
 
