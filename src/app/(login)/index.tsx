@@ -36,7 +36,7 @@ export default function TelaLogin(props: TelaLoginProps) {
                 onPress: () => console.log('Login Realizado com Sucesso!')
             }
         ]);
-        router.replace('/tela2/inicio')
+        router.replace('/inicio')
     }
 
     const [nome, setNome] = React.useState('Rafael Rodrigues');
@@ -51,7 +51,7 @@ export default function TelaLogin(props: TelaLoginProps) {
             <View style={styles.texto}>
                 <Text style={{ marginBottom: 15, fontWeight: 'bold' }}>Login:</Text>
            
-                <TextInput style={styles.credenciais} onChangeText={(texto) => setNome(String(texto))} placeholder='Digite Seu Nome' >{nome}</TextInput>           
+                <TextInput style={styles.credenciais} onChangeText={(texto) => setNome(String(texto))} placeholder='Digite seu nome' >{nome}</TextInput>           
                 <TextInput style={styles.credenciais} onChangeText={(texto) => setCpf(String(texto))} placeholder='Digite Seu Cpf' >{cpf}</TextInput>
         
                 <View style={styles.botao}>
