@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "projeto",
+    "slug": "projeto",
+    "version": "1.0.0",
+    "scheme": "rrbank",
+    "orientation": "portrait",
+    "icon": "./assets/icon-rrbank.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-rrbank.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rafaelcrb.projeto"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.rafaelcrb.projeto"
+    },
+    "web": {
+      "favicon": "./assets/favicon-rrbank.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d51124dd-c85b-4555-b90b-c37e6e701695"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d51124dd-c85b-4555-b90b-c37e6e701695"
+    },
+    "owner": "rafaelcrb"
+  }
+}
