@@ -15,6 +15,7 @@ import Saldo from 'react-native-vector-icons/EvilIcons'
 import Minhaconta from 'react-native-vector-icons/MaterialCommunityIcons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { router } from 'expo-router';
+import { auth } from '../config/firebase';
 
 export interface TelaMenuProps {
 }
@@ -103,7 +104,12 @@ export default function TelaMenu(props: TelaMenuProps) {
                         <Text style={styles.textMenu}>Ajuda </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => {
+                    auth.signOut();
+                    router.replace('/')
+                    
+                }}>
                 <View>
                     <Text>__________________________________________</Text>
                     <Sair style={styles.imgMenu} name="logout" size={25}></Sair>

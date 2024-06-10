@@ -11,12 +11,15 @@ import imgextrato from './../../../assets/imgs/Extrato.png'
 import imgpix from './../../../assets/imgs/Pix_menu.png'
 import imgmenu from './../../../assets/imgs/Menu.png'
 import Finance from 'react-native-vector-icons/MaterialCommunityIcons'
-
-
 import Saldo from 'react-native-vector-icons/EvilIcons'
 import Minhaconta from 'react-native-vector-icons/Entypo'
 import Icon from 'react-native-vector-icons/Entypo'
 import { router } from 'expo-router';
+import { getAuth, onAuthStateChanged, updateEmail, updatePassword } from "firebase/auth"
+import { useEffect, useState } from "react";
+import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { auth, db } from "../config/firebase";
+import { Formik } from "formik";
 
 export interface TelaInicioProps {
 }
@@ -25,38 +28,64 @@ export default function TelaInicio(props: TelaInicioProps) {
 
     const [exibir, setExibir] = React.useState(false);
     const [valor, setValor] = React.useState(100);
+    const [displayName, setDisplayName] = useState('');
 
     const menu = () => {
         router.replace('/menu')
     }
-    
+
     const inicio = () => {
         router.replace('/inicio')
     }
 
     const extrato = () => {
         router.replace('/extrato')
-      }
-    
-      const pix = () => {
+    }
+
+    const pix = () => {
         router.replace('/pix')
-     }
+    }
 
-     const pag_recebpix = () => {
+    const pag_recebpix = () => {
         router.replace('/pag_recebpix')
-     }
+    }
 
-     const pagarcontas = () => {
+    const pagarcontas = () => {
         router.replace('/pagarconta')
-     }
-     
+    }
+
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            try {
+              const userDocRef = doc(db, "usuarios", user.uid);
+              const userDoc = await getDoc(userDocRef);
+              if (userDoc.exists()) {
+                const userData = userDoc.data();
+                console.log("Dados do usuário:", userData);
+                setDisplayName(userData.displayName);
+              } else {
+                console.log("Documento do usuário não encontrado no Firestore");
+              }
+            } catch (error) {
+              console.error("Erro ao buscar o documento do usuário:", error);
+            }
+          } else {
+            console.log("Nenhum usuário logado");
+          }
+        });
+    
+        return () => unsubscribe();
+      }, []);
+    
 
     return (
         <View style={styles.container} >
 
             <View style={styles.header}>
                 <Image style={styles.logo} source={logo} />
-                <Text style={styles.textHeader}>Olá, Rafael</Text>
+                <Text style={styles.textHeader}>Olá, {auth.currentUser?.email}</Text>
             </View>
 
             <View style={{ justifyContent: 'space-around', flexDirection: 'column', width: 320, height: 72 }}>
@@ -174,9 +203,9 @@ const styles = StyleSheet.create({
 
     },
     textHeader: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
-        right: 100
+        right: 70
 
     },
     iconSaldo: {

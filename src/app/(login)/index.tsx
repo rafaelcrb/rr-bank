@@ -3,12 +3,17 @@ import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert, Butt
 import logo from './../../../assets/imgs/Logo_RRBank.png'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { router } from 'expo-router';
+import { Formik } from "formik";
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
+import { doc, setDoc, getFirestore } from '@firebase/firestore';
+import { db } from '../config/firebase';
 
 export interface TelaLoginProps {
 }
 
 export default function TelaLogin(props: TelaLoginProps) {
-    
+
     //VARIAVEIS
     const confirmAlert = () =>
         Alert.alert('Confirmação!', 'Deseja Realmente Trocar de Conta?', [
@@ -43,42 +48,64 @@ export default function TelaLogin(props: TelaLoginProps) {
     const [cpf, setCpf] = React.useState('***.613.334-**');
     const [senha, setSenha] = React.useState('');
 
+    const handleLogin = async ({ email, senha }: any) => {
+
+        await signInWithEmailAndPassword(auth, email, senha)
+            .then(usuario => router.replace('/inicio'))
+            .catch(erro => Alert.alert('Erro', 'Login ou senha incorreta!'));
+    }
 
     return (
         <View style={styles.container}>
             <Image style={styles.logo} source={logo} />
 
-            <View style={styles.texto}>
-                <Text style={{ marginBottom: 15, fontWeight: 'bold' }}>Login:</Text>
+            <View style={styles.container2}>
+                <Formik
+                    initialValues={{ email: '', senha: '' }}
+                    onSubmit={handleLogin}
+                >
+                    {({ handleChange, handleSubmit, isSubmitting }) => (
+                        <>
+                            <Text style={{ marginBottom: 15, fontWeight: 'bold' }}>Login:</Text>
+
+                            <View style={styles.texto}>
+                                <TextInput onChangeText={handleChange('email')} style={[styles.input2, styles.borderBottom]} placeholder="EMAIL:" />
+                                <TextInput onChangeText={handleChange('senha')} style={styles.input2} secureTextEntry placeholder="SENHA:" />
+
+                                <View style={styles.botao}>
+                                    <Button title={'Trocar Conta'} onPress={confirmAlert} color={'#000'} />
+                                </View>
+
+                                
+
+                            </View>
+                            {/* <View style={styles.botaoSenha}>
+                                <Button onPress={alterarSenha} title='Esqueci minha senha' color={'#000'}></Button>
+                            </View> */}
+
+                            <TouchableOpacity style={styles.botaoLogin} onPress={() => handleSubmit()} disabled={isSubmitting} >
+                                <Text style={{ fontSize: 22, fontWeight: 'bold', top: 3, }} >
+                                    ACESSAR
+                                </Text>
+                            </TouchableOpacity>
+                        </>
+                    )}
+                </Formik>
+
+                <TouchableOpacity onPress={() => router.push('/cadastro')}>
+                    <Text style={styles.cadastro}>Não possui conta? </Text>
+                    <Text  style={styles.cadastro}> Clique-aqui para se cadastrar!</Text>
+                </TouchableOpacity>
+
+            </View>
+
+
            
-                <TextInput style={styles.credenciais} onChangeText={(texto) => setNome(String(texto))} placeholder='Digite seu nome' >{nome}</TextInput>           
-                <TextInput style={styles.credenciais} onChangeText={(texto) => setCpf(String(texto))} placeholder='Digite Seu Cpf' >{cpf}</TextInput>
-        
-                <View style={styles.botao}>
-                    <Button title={'Trocar Conta'} onPress={confirmAlert} color={'#000'} />
-                </View>
-            </View>
-
-            <View style={styles.containersenha}>   
-                <TextInput style={styles.input} onChangeText={(texto) => setSenha(String(texto))} placeholder='Digite Sua Senha' secureTextEntry={true}>{senha}</TextInput>
+         
               
-                <Text style={{ left: 25 }}>__________________________</Text>
-                <Icon style={styles.icon} name="lock" size={22} color='#000' />
+                
 
-                <View style={styles.botaoSenha}>
-                    <Button onPress={alterarSenha} title='Esqueci' color={'#000'}></Button>
-                </View>
-
-
-            </View>
-
-            <TouchableOpacity style={styles.botaoLogin} onPress={login} >
-                <Text style={{ fontSize: 25, fontWeight: 'bold', top: 3 }} >
-                    ACESSAR
-                </Text>
-            </TouchableOpacity>
-
-
+         
 
         </View>
     );
@@ -90,8 +117,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
-
-
     },
     logo: {
         width: 130,
@@ -99,14 +124,13 @@ const styles = StyleSheet.create({
 
     },
     texto: {
-        justifyContent: 'space-around',
+        padding: 8,
         backgroundColor: '#BDF8E2',
         width: 315,
-        height: 88,
+        height: 70,
         fontSize: 14,
-        marginTop: 50,
         borderRadius: 15,
-        shadowOpacity: 0.5
+        shadowOpacity: 0.2
 
 
 
@@ -120,13 +144,14 @@ const styles = StyleSheet.create({
         height: 25,
         borderRadius: 10,
         shadowOpacity: 0.3,
-   
+
     },
     botao: {
+        position: 'absolute',
         alignItems: 'flex-end',
-        marginBottom: 50,
-        marginRight: 10,
-        shadowOpacity: 0.3,
+        top: 15,
+        right: 5,
+        shadowOpacity: 0.2,
     },
     containersenha: {
         justifyContent: 'space-around',
@@ -148,7 +173,7 @@ const styles = StyleSheet.create({
         marginTop: 14,
         marginLeft: 25,
         borderRadius: 15,
-  
+
 
     },
 
@@ -157,21 +182,47 @@ const styles = StyleSheet.create({
         top: 15
     },
     botaoSenha: {
+        marginTop: 15,
         alignItems: 'flex-end',
         marginRight: 10,
         bottom: 15,
     },
     botaoLogin: {
+        alignSelf: 'center',
         marginTop: 35,
+        marginBottom: 20,
         backgroundColor: '#BDF8E2',
         alignItems: 'center',
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.2,
         borderRadius: 15,
-        width: 260,
+        width: 200,
         height: 40,
         fontWeight: 'bold'
+    },
+    header: {
 
-    }
-
+        fontSize: 20,
+        textAlign: 'center'
+    },
+    input2: {
+       
+        padding: 5
+    },
+    borderBottom: {
+        width: 150,
+        borderBottomColor: 'black',
+        borderBottomWidth: 1.5
+    },
+    cadastro: {
+        alignItems: 'center',
+        
+        fontSize: 15,
+        textAlign: 'center'
+    },
+    container2: {
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        padding: 20
+    },
 
 });
